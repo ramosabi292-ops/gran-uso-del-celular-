@@ -1,0 +1,1323 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Explora la Salud Digital</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    /* ===== CONFIGURACIÓN GENERAL ===== */
+    :root {
+      --principal: #6d28d9;
+      --principal-claro: #8b5cf6;
+      --secundario: #0891b2;
+      --acento: #06b6d4;
+      --rosa-suave: #ec4899;
+      --oscuro: #172554;
+      --fondo: #f5f3ff;
+      --blanco: #ffffff;
+      --texto: #334155;
+      --borde: #ddd6fe;
+      --sombra-suave: 0 12px 32px rgba(23, 37, 84, 0.08);
+      --sombra-fuerte: 0 20px 45px rgba(109, 40, 217, 0.16);
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Plus Jakarta Sans', Arial, Helvetica, sans-serif;
+      color: var(--texto);
+      background-color: #e9d5ff;
+      background-image:
+        radial-gradient(circle at 12% 14%, rgba(139, 92, 246, 0.34), transparent 36%),
+        radial-gradient(circle at 88% 18%, rgba(6, 182, 212, 0.32), transparent 38%),
+        radial-gradient(circle at 82% 72%, rgba(236, 72, 153, 0.22), transparent 36%),
+        radial-gradient(circle at 18% 78%, rgba(56, 189, 248, 0.28), transparent 40%),
+        linear-gradient(135deg, #ede9fe 0%, #e0f2fe 48%, #f3e8ff 100%);
+      background-attachment: fixed;
+      line-height: 1.75;
+      overflow-x: hidden;
+    }
+
+    /* Barra superior de progreso de lectura */
+    .barra-lectura {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 0%;
+      height: 4px;
+      background: linear-gradient(90deg, var(--principal), var(--acento), var(--rosa-suave));
+      z-index: 200;
+      transition: width 0.1s linear;
+    }
+
+    h1, h2, h3 {
+      line-height: 1.25;
+      letter-spacing: -0.02em;
+    }
+
+    img {
+      max-width: 100%;
+      height: auto;
+    }
+
+    /* ===== PANTALLA DE BIENVENIDA ===== */
+    #cerrar-bienvenida {
+      display: none;
+    }
+
+    .pantalla-bienvenida {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 25px;
+      text-align: center;
+      color: white;
+      background:
+        linear-gradient(
+          135deg,
+          rgba(23, 37, 84, 0.88),
+          rgba(109, 40, 217, 0.78),
+          rgba(8, 145, 178, 0.7)
+        ),
+        url("https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1600&q=85");
+      background-size: cover;
+      background-position: center;
+      transition: opacity 0.4s ease;
+    }
+
+    #cerrar-bienvenida:checked + .pantalla-bienvenida {
+      display: none;
+    }
+
+    .pantalla-bienvenida h1 {
+      max-width: 850px;
+      font-size: clamp(2.1rem, 5.5vw, 4rem);
+      font-weight: 800;
+      margin: 0 0 20px;
+      text-shadow: 0 6px 24px rgba(0, 0, 0, 0.35);
+    }
+
+    .pantalla-bienvenida p {
+      max-width: 650px;
+      font-size: clamp(1rem, 2vw, 1.18rem);
+      margin: 0 0 32px;
+      padding: 0 15px;
+      color: rgba(255, 255, 255, 0.94);
+    }
+
+    .btn-inicio {
+      display: inline-block;
+      padding: 15px 34px;
+      border-radius: 50px;
+      background: linear-gradient(135deg, #ffffff, #e0f2fe);
+      color: var(--principal);
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.25);
+      transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+    }
+
+    .btn-inicio:hover {
+      background: #ffffff;
+      transform: translateY(-4px) scale(1.02);
+      box-shadow: 0 16px 34px rgba(6, 182, 212, 0.35);
+    }
+
+    /* ===== ENCABEZADO ===== */
+    header {
+      position: relative;
+      padding: 62px 20px;
+      text-align: center;
+      color: white;
+      background:
+        radial-gradient(circle at top right, rgba(6, 182, 212, 0.38), transparent 45%),
+        radial-gradient(circle at bottom left, rgba(236, 72, 153, 0.24), transparent 45%),
+        linear-gradient(135deg, #172554 0%, #6d28d9 55%, #0891b2 100%);
+      border-radius: 0 0 38px 38px;
+      box-shadow: 0 14px 35px rgba(23, 37, 84, 0.18);
+    }
+
+    header h1 {
+      margin: 0 0 12px;
+      font-size: clamp(2.1rem, 5vw, 3.35rem);
+      font-weight: 800;
+      text-shadow: 0 4px 18px rgba(0, 0, 0, 0.22);
+    }
+
+    header p {
+      margin: 0 auto;
+      max-width: 600px;
+      font-size: clamp(1rem, 2vw, 1.15rem);
+      color: rgba(255, 255, 255, 0.92);
+    }
+
+    .etiqueta {
+      display: inline-block;
+      margin-bottom: 15px;
+      padding: 6px 16px;
+      border: 1px solid rgba(255, 255, 255, 0.45);
+      border-radius: 50px;
+      background: rgba(255, 255, 255, 0.14);
+      backdrop-filter: blur(6px);
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+    }
+
+    /* ===== MENÚ DE NAVEGACIÓN Y DESPLEGABLE ===== */
+    nav {
+      position: sticky;
+      top: 4px;
+      z-index: 100;
+      padding: 10px 15px;
+      background: rgba(255, 255, 255, 0.88);
+      border-bottom: 1px solid rgba(221, 214, 254, 0.85);
+      box-shadow: 0 6px 20px rgba(23, 37, 84, 0.08);
+      backdrop-filter: blur(12px);
+    }
+
+    .menu {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+      max-width: 1100px;
+      margin: auto;
+    }
+
+    .menu > a,
+    .dropbtn {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 9px 15px;
+      border: none;
+      border-radius: 30px;
+      background: transparent;
+      color: var(--oscuro);
+      text-decoration: none;
+      font-family: inherit;
+      font-weight: 700;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.25s ease;
+    }
+
+    .menu > a:hover,
+    .menu > a:focus-visible,
+    .dropbtn:hover,
+    .dropbtn:focus-visible,
+    .dropdown.activo .dropbtn {
+      color: white;
+      background: linear-gradient(135deg, var(--principal), var(--secundario));
+      box-shadow: 0 6px 14px rgba(109, 40, 217, 0.25);
+      outline: none;
+    }
+
+    .flecha {
+      display: inline-block;
+      transition: transform 0.25s ease;
+    }
+
+    .dropdown.activo .flecha {
+      transform: rotate(180deg);
+    }
+
+    /* Estilos del Menú Desplegable */
+    .dropdown {
+      position: relative;
+      display: inline-block;
+    }
+
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      top: calc(100% + 10px);
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: var(--blanco);
+      min-width: 215px;
+      box-shadow: 0 14px 30px rgba(23, 37, 84, 0.16);
+      border: 1px solid var(--borde);
+      border-radius: 16px;
+      padding: 8px;
+      z-index: 101;
+    }
+
+    .dropdown.activo .dropdown-content {
+      display: block;
+      animation: aparecerMenu 0.2s ease;
+    }
+
+    @keyframes aparecerMenu {
+      from {
+        opacity: 0;
+        transform: translate(-50%, -8px);
+      }
+      to {
+        opacity: 1;
+        transform: translate(-50%, 0);
+      }
+    }
+
+    .dropdown-content a {
+      color: var(--oscuro);
+      padding: 10px 14px;
+      border-radius: 10px;
+      text-decoration: none;
+      display: block;
+      text-align: left;
+      font-weight: 700;
+      font-size: 0.88rem;
+      transition: all 0.2s ease;
+    }
+
+    .dropdown-content a:hover {
+      background: linear-gradient(90deg, rgba(109, 40, 217, 0.1), rgba(8, 145, 178, 0.1));
+      color: var(--principal);
+      transform: translateX(3px);
+    }
+
+    /* ===== CONTENIDO PRINCIPAL ===== */
+    main {
+      width: min(1100px, 100%);
+      margin: auto;
+      padding: 18px 15px 35px;
+    }
+
+    .tarjeta {
+      position: relative;
+      overflow: hidden;
+      margin: 30px 0;
+      padding: clamp(22px, 4vw, 40px);
+      background: rgba(255, 255, 255, 0.94);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(196, 181, 253, 0.9);
+      border-radius: 24px;
+      box-shadow: var(--sombra-suave);
+      scroll-margin-top: 95px;
+      opacity: 0;
+      transform: translateY(22px);
+      transition: opacity 0.6s ease, transform 0.6s ease, box-shadow 0.3s ease;
+    }
+
+    .tarjeta.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .tarjeta::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 5px;
+      background: linear-gradient(90deg, var(--principal), var(--acento), var(--rosa-suave));
+    }
+
+    .tarjeta.visible:hover {
+      box-shadow: var(--sombra-fuerte);
+    }
+
+    .titulo-destacado {
+      margin-top: 0;
+      font-size: clamp(1.5rem, 4vw, 2.05rem);
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--oscuro), var(--principal), var(--secundario));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .subtitulo {
+      margin-top: 28px;
+      color: var(--oscuro);
+      font-size: clamp(1.12rem, 2.5vw, 1.32rem);
+      font-weight: 700;
+      display: inline-block;
+      border-bottom: 3px solid rgba(8, 145, 178, 0.3);
+      padding-bottom: 4px;
+    }
+
+    /* ===== IMÁGENES ===== */
+    .imagen-salud {
+      display: block;
+      width: 100%;
+      max-width: 660px;
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
+      margin: 24px auto;
+      border: 4px solid white;
+      border-radius: 22px;
+      box-shadow: 0 12px 28px rgba(23, 37, 84, 0.16);
+      transition: transform 0.35s ease, box-shadow 0.35s ease;
+    }
+
+    .imagen-salud:hover {
+      transform: translateY(-5px) scale(1.01);
+      box-shadow: 0 18px 34px rgba(109, 40, 217, 0.22);
+    }
+
+    /* ===== LISTAS ===== */
+    ul {
+      padding-left: 20px;
+    }
+
+    li {
+      margin-bottom: 10px;
+    }
+
+    li::marker {
+      color: var(--principal);
+      font-weight: bold;
+    }
+
+    /* ===== BLOQUES INFORMATIVOS ===== */
+    .bloque-info {
+      margin: 22px 0;
+      padding: 20px 22px;
+      border-radius: 16px;
+      background: linear-gradient(135deg, #f3e8ff, #e0f2fe);
+      border: 1px solid var(--borde);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8);
+    }
+
+    .bloque-info h3 {
+      margin-top: 0;
+      color: var(--principal);
+      font-weight: 700;
+    }
+
+    .destacado {
+      padding: 18px 22px;
+      border-left: 5px solid var(--secundario);
+      border-radius: 14px;
+      background: linear-gradient(135deg, #cffafe, #f0f9ff);
+      box-shadow: 0 6px 16px rgba(8, 145, 178, 0.08);
+    }
+
+    /* ===== ESTILOS PARA LA ENCUESTA ===== */
+    .grupo-pregunta {
+      margin-bottom: 22px;
+      padding: 18px;
+      border-radius: 16px;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+    }
+
+    .grupo-pregunta label.pregunta-titulo {
+      display: block;
+      font-weight: 700;
+      color: var(--oscuro);
+      margin-bottom: 12px;
+    }
+
+    .opciones-lista {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .opcion-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.95rem;
+      cursor: pointer;
+      font-weight: normal;
+    }
+
+    input[type="radio"], input[type="checkbox"] {
+      accent-color: var(--principal);
+      width: 18px;
+      height: 18px;
+      cursor: pointer;
+    }
+
+    textarea {
+      width: 100%;
+      padding: 12px;
+      border-radius: 10px;
+      border: 1px solid var(--borde);
+      font-family: inherit;
+      resize: vertical;
+      min-height: 80px;
+    }
+
+    /* ===== VENTANAS MODALES ===== */
+    dialog {
+      padding: 0;
+      border: 1px solid var(--borde);
+      border-radius: 24px;
+      max-width: 650px;
+      width: 90%;
+      box-shadow: 0 25px 60px rgba(23, 37, 84, 0.35);
+      background: white;
+      animation: aparecerModal 0.3s ease;
+    }
+
+    dialog::backdrop {
+      background: rgba(23, 37, 84, 0.65);
+      backdrop-filter: blur(6px);
+    }
+
+    .contenido-modal {
+      padding: clamp(22px, 5vw, 36px);
+    }
+
+    .contenido-modal h3 {
+      color: var(--principal);
+      margin-top: 0;
+      font-weight: 800;
+    }
+
+    @keyframes aparecerModal {
+      from {
+        opacity: 0;
+        transform: translateY(20px) scale(0.98);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    /* ===== REPRODUCTOR DE MÚSICA ===== */
+    .reproductor-card {
+      background: linear-gradient(135deg, #ede9fe 0%, #e0f2fe 55%, #fce7f3 100%);
+      border: 1px solid var(--borde);
+      border-radius: 20px;
+      padding: 22px;
+      margin-top: 20px;
+      box-shadow: 0 10px 24px rgba(23, 37, 84, 0.07);
+    }
+
+    .info-cancion {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+
+    .icono-musica {
+      width: 48px;
+      height: 48px;
+      background: linear-gradient(135deg, var(--principal), var(--secundario));
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 14px;
+      font-size: 1.25rem;
+      flex-shrink: 0;
+      box-shadow: 0 6px 16px rgba(109, 40, 217, 0.25);
+    }
+
+    .info-cancion h4 {
+      margin: 0;
+      color: var(--oscuro);
+      font-size: 1.05rem;
+      font-weight: 700;
+    }
+
+    .info-cancion span {
+      font-size: 0.85rem;
+      color: #64748b;
+    }
+
+    .progreso-container {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: #64748b;
+      margin-bottom: 16px;
+    }
+
+    .progreso-container input[type="range"],
+    .volumen-wrapper input[type="range"] {
+      flex: 1;
+      accent-color: var(--principal);
+      cursor: pointer;
+    }
+
+    .controles-reproductor {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .btn-control {
+      background: white;
+      border: 1px solid var(--borde);
+      color: var(--oscuro);
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    }
+
+    .btn-control:hover {
+      background: var(--principal);
+      color: white;
+      border-color: var(--principal);
+      transform: scale(1.06);
+    }
+
+    .btn-play {
+      width: 52px;
+      height: 52px;
+      background: linear-gradient(135deg, var(--principal), var(--secundario));
+      color: white;
+      border: none;
+      font-size: 1.2rem;
+      box-shadow: 0 8px 18px rgba(109, 40, 217, 0.28);
+    }
+
+    .volumen-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-left: auto;
+      font-size: 0.9rem;
+    }
+
+    /* ===== CONTENEDOR DE VIDEO DE YOUTUBE ===== */
+    .video-container {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      margin: 22px 0;
+      border-radius: 18px;
+      overflow: hidden;
+      box-shadow: 0 12px 28px rgba(23, 37, 84, 0.14);
+      border: 3px solid white;
+    }
+
+    .video-container iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+
+    /* ===== TABLA DE HÁBITOS ===== */
+    .tabla-contenedor {
+      width: 100%;
+      overflow-x: auto;
+      margin-top: 20px;
+      border-radius: 14px;
+      border: 1px solid var(--borde);
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .tabla-estilos {
+      width: 100%;
+      min-width: 480px;
+      border-collapse: collapse;
+      background: white;
+    }
+
+    .tabla-estilos th,
+    .tabla-estilos td {
+      padding: 13px 16px;
+      text-align: left;
+      border-bottom: 1px solid #e2e8f0;
+      font-size: 0.95rem;
+    }
+
+    .tabla-estilos th {
+      color: white;
+      background: linear-gradient(135deg, var(--oscuro), var(--principal));
+      font-weight: 700;
+    }
+
+    .tabla-estilos tbody tr:hover {
+      background: #eef2ff;
+    }
+
+    .tabla-estilos tbody tr:nth-child(even) {
+      background: #f8fafc;
+    }
+
+    /* ===== BOTONES ===== */
+    .btn-bienvenida {
+      display: inline-block;
+      margin: 15px 0 10px;
+      padding: 13px 26px;
+      border: none;
+      border-radius: 50px;
+      color: white;
+      background: linear-gradient(135deg, var(--principal), var(--secundario));
+      font-family: inherit;
+      font-size: 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 8px 20px rgba(109, 40, 217, 0.24);
+      transition: transform 0.25s ease, box-shadow 0.25s ease, filter 0.25s ease;
+      text-align: center;
+    }
+
+    .btn-bienvenida:hover {
+      filter: brightness(1.07);
+      transform: translateY(-3px);
+      box-shadow: 0 12px 26px rgba(8, 145, 178, 0.3);
+    }
+
+    .btn-secundario-modal {
+      display: inline-block;
+      margin-top: 20px;
+      padding: 10px 24px;
+      border: none;
+      border-radius: 30px;
+      color: white;
+      background: linear-gradient(135deg, var(--secundario), var(--principal));
+      font-family: inherit;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.2s ease, filter 0.2s ease;
+    }
+
+    .btn-secundario-modal:hover {
+      filter: brightness(1.08);
+      transform: translateY(-2px);
+    }
+
+    /* ===== BOTÓN FLOTANTE PARA REGRESAR A LA PANTALLA DE BIENVENIDA ===== */
+    .btn-volver-arriba {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      padding: 12px 22px;
+      border-radius: 50px;
+      background: linear-gradient(135deg, var(--principal), var(--secundario));
+      color: white;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-size: 0.92rem;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 8px 22px rgba(109, 40, 217, 0.35);
+      z-index: 150;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(15px);
+      transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s ease, filter 0.2s ease;
+    }
+
+    .btn-volver-arriba.mostrar {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+
+    .btn-volver-arriba:hover {
+      filter: brightness(1.1);
+      transform: translateY(-4px) scale(1.05);
+    }
+
+    /* ===== PIE DE PÁGINA ===== */
+    footer {
+      padding: 36px 20px;
+      text-align: center;
+      color: white;
+      background: linear-gradient(135deg, #0f172a, var(--oscuro), #311081);
+      border-top: 5px solid var(--acento);
+      margin-top: 20px;
+    }
+
+    footer p {
+      margin: 6px 0;
+      font-size: 0.95rem;
+    }
+
+    /* ===== ADAPTABILIDAD MULTIDISPOSITIVO ===== */
+    @media (max-width: 768px) {
+      body {
+        background-attachment: scroll;
+      }
+
+      header {
+        padding: 46px 15px;
+        border-radius: 0 0 26px 26px;
+      }
+
+      .menu {
+        gap: 6px;
+      }
+
+      .menu > a,
+      .dropbtn {
+        padding: 8px 12px;
+        font-size: 0.85rem;
+      }
+
+      main {
+        padding: 12px 10px 28px;
+      }
+
+      .tarjeta {
+        margin: 20px 0;
+        padding: 20px;
+        border-radius: 18px;
+      }
+
+      .volumen-wrapper {
+        margin-left: 0;
+        width: 100%;
+        justify-content: center;
+        margin-top: 10px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      header {
+        padding: 36px 12px;
+      }
+
+      .menu {
+        justify-content: space-around;
+      }
+
+      .menu > a,
+      .dropbtn {
+        padding: 6px 10px;
+        font-size: 0.8rem;
+      }
+
+      .tarjeta {
+        padding: 16px;
+      }
+
+      .btn-bienvenida {
+        width: 100%;
+        text-align: center;
+      }
+
+      .btn-volver-arriba {
+        bottom: 16px;
+        right: 16px;
+        padding: 10px 16px;
+        font-size: 0.85rem;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        scroll-behavior: auto !important;
+        transition: none !important;
+        animation: none !important;
+      }
+
+      .tarjeta {
+        opacity: 1 !important;
+        transform: none !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- BARRA DE PROGRESO DE LECTURA -->
+  <div class="barra-lectura" id="barra-lectura"></div>
+
+  <!-- PANTALLA DE BIENVENIDA -->
+  <input type="checkbox" id="cerrar-bienvenida">
+
+  <div class="pantalla-bienvenida">
+    <span class="etiqueta">TECNOLOGÍA Y BIENESTAR</span>
+    <h1>¡Bienvenido a Explora la Salud Digital!</h1>
+    <p>
+      Un espacio educativo para aprender a utilizar la tecnología
+      de manera responsable, cuidar nuestra salud y mejorar nuestros
+      hábitos digitales.
+    </p>
+    <label for="cerrar-bienvenida" class="btn-inicio">
+      Entrar al sitio →
+    </label>
+  </div>
+
+  <!-- ENCABEZADO -->
+  <header id="inicio">
+    <span class="etiqueta">PROYECTO ESCOLAR</span>
+    <h1>Explora la Salud Digital</h1>
+    <p>Aprende, conéctate y cuida tu bienestar en el mundo digital.</p>
+  </header>
+
+  <!-- MENÚ DE NAVEGACIÓN -->
+  <nav aria-label="Menú principal">
+    <div class="menu">
+      <a href="#inicio">Inicio</a>
+      <a href="#bienestar">Bienestar digital</a>
+      <a href="#riesgos">Riesgos digitales</a>
+      <a href="#emociones">Mente y emociones</a>
+      <a href="#habitos">Hábitos saludables</a>
+      <a href="#encuesta">📝 Encuesta</a>
+      
+      <!-- MENÚ DESPLEGABLE INTERACTIVO -->
+      <div class="dropdown" id="menu-recursos">
+        <button type="button" class="dropbtn" id="btn-dropdown" aria-expanded="false" aria-controls="lista-dropdown">
+          Recursos <span class="flecha">▾</span>
+        </button>
+        <div class="dropdown-content" id="lista-dropdown">
+          <a href="#encuesta">📝 Encuesta de Hábitos</a>
+          <a href="#recursos">📚 Guías y Consejos</a>
+          <a href="#musica">🎧 Música Relajante</a>
+          <a href="#video-destacado">📺 Video Educativo</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <main>
+
+    <!-- SECCIÓN 1: BIENESTAR DIGITAL -->
+    <section id="bienestar" class="tarjeta">
+      <h2 class="titulo-destacado">01. Bienestar digital</h2>
+      <p>
+        La salud digital consiste en cuidar nuestro bienestar físico,
+        mental y social mientras utilizamos celulares, computadoras,
+        tabletas y otros dispositivos electrónicos.
+      </p>
+
+      <img
+        class="imagen-salud"
+        src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1000&q=85"
+        alt="Personas utilizando dispositivos tecnológicos"
+        loading="lazy"
+      >
+
+      <h3 class="subtitulo">¿Por qué es importante?</h3>
+      <p>
+        La tecnología facilita el aprendizaje, la comunicación y el
+        acceso a la información. Sin embargo, debemos aprender a
+        utilizarla con equilibrio, seguridad y responsabilidad.
+      </p>
+
+      <div class="bloque-info">
+        <h3>Los pilares del bienestar digital</h3>
+        <ul>
+          <li>Cuidar la vista y mantener una postura adecuada.</li>
+          <li>Proteger nuestros datos personales.</li>
+          <li>Equilibrar el tiempo frente a las pantallas.</li>
+          <li>Conservar una buena convivencia con otras personas.</li>
+          <li>Utilizar internet para aprender y crear.</li>
+        </ul>
+      </div>
+
+      <button class="btn-bienvenida" type="button" onclick="document.getElementById('modal-bienestar').showModal()">
+        🔍 Ver más sobre Bienestar Digital
+      </button>
+    </section>
+
+    <!-- VENTANA MODAL 1 -->
+    <dialog id="modal-bienestar">
+      <div class="contenido-modal">
+        <h3>Ampliación: ¿Qué es el control del tiempo en pantalla?</h3>
+        <p>
+          El bienestar digital no significa dejar de usar la tecnología, sino 
+          convertirnos en usuarios conscientes. Las herramientas de bienestar 
+          digital en los teléfonos móviles permiten medir cuántas horas pasamos 
+          al día en cada aplicación, ayudándonos a establecer límites diarios 
+          para evitar el uso automático o compulsivo.
+        </p>
+        <p><strong>Clave del éxito:</strong> Define zonas libres de tecnología en casa, como la mesa a la hora de comer.</p>
+        <button class="btn-secundario-modal" type="button" onclick="document.getElementById('modal-bienestar').close()">Cerrar ventana</button>
+      </div>
+    </dialog>
+
+    <!-- SECCIÓN 2: RIESGOS DIGITALES -->
+    <section id="riesgos" class="tarjeta">
+      <h2 class="titulo-destacado">02. Riesgos digitales</h2>
+      <p>
+        Pasar demasiado tiempo utilizando dispositivos sin descansos
+        ni límites puede afectar nuestras actividades cotidianas.
+        Reconocer los riesgos nos ayuda a prevenir problemas.
+      </p>
+
+      <img
+        class="imagen-salud"
+        src="https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=1000&q=85"
+        alt="Teléfono celular utilizado para actividades digitales"
+        loading="lazy"
+      >
+
+      <h3 class="subtitulo">Principales consecuencias</h3>
+      <ul>
+        <li><strong>Falta de concentración:</strong> las notificaciones pueden interrumpir el estudio.</li>
+        <li><strong>Alteraciones del sueño:</strong> utilizar pantallas hasta tarde puede dificultar el descanso.</li>
+        <li><strong>Fatiga visual:</strong> mirar de cerca una pantalla durante mucho tiempo puede causar cansancio ocular.</li>
+        <li><strong>Molestias físicas:</strong> una postura inadecuada puede causar molestias en el cuello y la espalda.</li>
+        <li><strong>Menor actividad física:</strong> permanecer sentado durante periodos prolongados reduce las oportunidades de movimiento.</li>
+        <li><strong>Riesgos de privacidad:</strong> compartir información personal puede poner en peligro nuestra seguridad.</li>
+      </ul>
+
+      <div class="destacado">
+        <strong>Recuerda:</strong> la tecnología no es el problema por sí misma.
+        Lo importante es cómo, cuándo y para qué la utilizamos.
+      </div>
+
+      <button class="btn-bienvenida" type="button" onclick="document.getElementById('modal-riesgos').showModal()">
+        🔍 Saber más sobre prevención de riesgos
+      </button>
+    </section>
+
+    <!-- VENTANA MODAL 2 -->
+    <dialog id="modal-riesgos">
+      <div class="contenido-modal">
+        <h3>Ampliación: Prevención del Ciberacoso</h3>
+        <p>
+          El ciberacoso (o ciberbullying) es uno de los riesgos más delicados en internet. 
+          Ocurre cuando se usa la tecnología para intimidar, amenazar o burlarse de alguien de forma reiterada.
+        </p>
+        <p><strong>¿Qué hacer si ocurre?</strong></p>
+        <ul>
+          <li>No respondas a las provocaciones ni alimentes el conflicto.</li>
+          <li>Guarda pruebas (haz capturas de pantalla).</li>
+          <li>Bloquea al usuario de inmediato.</li>
+          <li>Comunícaselo a tus padres, maestros o una persona de confianza.</li>
+        </ul>
+        <button class="btn-secundario-modal" type="button" onclick="document.getElementById('modal-riesgos').close()">Cerrar ventana</button>
+      </div>
+    </dialog>
+
+    <!-- SECCIÓN 3: MENTE Y EMOCIONES -->
+    <section id="emociones" class="tarjeta">
+      <h2 class="titulo-destacado">03. Mente y emociones</h2>
+      <p>
+        Las redes sociales, los videojuegos y las notificaciones
+        pueden influir en nuestro estado de ánimo. Compararnos
+        constantemente con otras personas o sentir la necesidad
+        de revisar el celular puede generar estrés y preocupación.
+      </p>
+
+      <img
+        class="imagen-salud"
+        src="https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=1000&q=85"
+        alt="Persona en un entorno tranquilo"
+        loading="lazy"
+      >
+
+      <h3 class="subtitulo">¿Cómo cuidar nuestro bienestar emocional?</h3>
+      <ul>
+        <li>Tomar descansos de las redes sociales.</li>
+        <li>Evitar compararnos con las imágenes que vemos en internet.</li>
+        <li>Hablar con alguien de confianza si algo nos preocupa.</li>
+        <li>Dedicar tiempo a nuestros amigos y familiares.</li>
+        <li>Silenciar las notificaciones cuando necesitamos concentrarnos.</li>
+        <li>Bloquear y reportar cuentas que acosen o amenacen.</li>
+      </ul>
+
+      <div class="bloque-info">
+        <h3>Seguridad emocional en internet</h3>
+        <p>
+          No tienes que responder inmediatamente a todos los mensajes.
+          Si una situación digital te hace sentir mal, puedes alejarte,
+          pedir ayuda y establecer límites.
+        </p>
+      </div>
+
+      <button class="btn-bienvenida" type="button" onclick="document.getElementById('modal-emociones').showModal()">
+        🔍 Descubrir más sobre el FOMO y las emociones
+      </button>
+    </section>
+
+    <!-- VENTANA MODAL 3 -->
+    <dialog id="modal-emociones">
+      <div class="contenido-modal">
+        <h3>Ampliación: ¿Qué es el FOMO?</h3>
+        <p>
+          El término <strong>FOMO</strong> viene del inglés <em>Fear Of Missing Out</em> 
+          (Miedo a perderse de algo). Es esa sensación de ansiedad que experimentamos 
+          cuando creemos que los demás están viviendo experiencias divertidas, enterándose 
+          de noticias o socializando sin nosotros en las redes sociales.
+        </p>
+        <p><strong>Consejo:</strong> Recuerda que en internet la gente suele publicar solo sus mejores momentos, no su día a día completo.</p>
+        <button class="btn-secundario-modal" type="button" onclick="document.getElementById('modal-emociones').close()">Cerrar ventana</button>
+      </div>
+    </dialog>
+
+    <!-- SECCIÓN 4: HÁBITOS SALUDABLES -->
+    <section id="habitos" class="tarjeta">
+      <h2 class="titulo-destacado">04. Hábitos saludables</h2>
+      <p>
+        Pequeños cambios en nuestra rutina pueden ayudarnos a
+        aprovechar la tecnología sin descuidar el descanso,
+        la actividad física y las relaciones personales.
+      </p>
+
+      <h3 class="subtitulo">Cinco hábitos para empezar</h3>
+      <ul>
+        <li>Establecer horarios para utilizar el celular.</li>
+        <li>Evitar las pantallas durante la última hora antes de dormir.</li>
+        <li>Aplicar la regla 20-20-20 para descansar la vista.</li>
+        <li>Mantener la espalda apoyada y el dispositivo a una altura cómoda.</li>
+        <li>Realizar actividades al aire libre y convivir en persona.</li>
+      </ul>
+
+      <div class="destacado">
+        <strong>Regla 20-20-20:</strong>
+        cada 20 minutos, mira durante 20 segundos un objeto situado
+        a unos 6 metros de distancia. Este hábito puede ayudar a
+        reducir la fatiga visual.
+      </div>
+
+      <h3 class="subtitulo">Ejemplo de rutina equilibrada</h3>
+      <div class="tabla-contenedor">
+        <table class="tabla-estilos">
+          <thead>
+            <tr>
+              <th>Momento</th>
+              <th>Actividad recomendada</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Por la mañana</td>
+              <td>Prepararse para el día y organizar las tareas.</td>
+            </tr>
+            <tr>
+              <td>Durante el estudio</td>
+              <td>Usar la tecnología con pausas y sin distracciones.</td>
+            </tr>
+            <tr>
+              <td>Por la tarde</td>
+              <td>Realizar ejercicio y convivir con otras personas.</td>
+            </tr>
+            <tr>
+              <td>Por la noche</td>
+              <td>Reducir el uso de pantallas y prepararse para dormir.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <button class="btn-bienvenida" style="margin-top: 25px;" type="button" onclick="document.getElementById('modal-habitos').showModal()">
+        🔍 Ver consejos de ergonomía digital
+      </button>
+    </section>
+
+    <!-- VENTANA MODAL 4 -->
+    <dialog id="modal-habitos">
+      <div class="contenido-modal">
+        <h3>Ampliación: Ergonomía al usar dispositivos</h3>
+        <p>
+          La postura incorrecta al usar el celular o la computadora puede causar 
+          el síndrome de "cuello de texto" (dolor cervical por inclinar la cabeza hacia abajo).
+        </p>
+        <p><strong>Postura ideal:</strong></p>
+        <ul>
+          <li>Mantén la pantalla a la altura de tus ojos para evitar doblar el cuello.</li>
+          <li>Apoya completamente la espalda en el respaldo de la silla.</li>
+          <li>Apoya los pies firmemente en el suelo.</li>
+        </ul>
+        <button class="btn-secundario-modal" type="button" onclick="document.getElementById('modal-habitos').close()">Cerrar ventana</button>
+      </div>
+    </dialog>
+
+    <!-- SECCIÓN 5: ENCUESTA DE HÁBITOS DIGITALES -->
+    <section id="encuesta" class="tarjeta">
+      <h2 class="titulo-destacado">05. Encuesta de Hábitos Digitales</h2>
+      <p>
+        Ayúdanos a conocer tus hábitos frente a las pantallas para evaluar tu bienestar digital.
+      </p>
+
+      <form onsubmit="event.preventDefault(); alert('¡Gracias por enviar tus respuestas!');">
+        
+        <!-- Pregunta 1 -->
+        <div class="grupo-pregunta">
+          <label class="pregunta-titulo">1. ¿Cuántas horas al día pasas frente a una pantalla (celular, computadora o tablet) fuera de tus horarios escolares?</label>
+          <div class="opciones-lista">
+            <label class="opcion-item"><input type="radio" name="tiempo" value="1-2" required> Menos de 2 horas</label>
+            <label class="opcion-item"><input type="radio" name="tiempo" value="3-4"> De 3 a 4 horas</label>
+            <label class="opcion-item"><input type="radio" name="tiempo" value="5+"> Más de 5 horas</label>
+          </div>
+        </div>
+
+        <!-- Pregunta 2 -->
+        <div class="grupo-pregunta">
+          <label class="pregunta-titulo">2. ¿Utilizas dispositivos electrónicos (celular, videojuegos) durante la última hora antes de dormir?</label>
+          <div class="opciones-lista">
+            <label class="opcion-item"><input type="radio" name="dormir" value="si" required> Sí, casi siempre</label>
+            <label class="opcion-item"><input type="radio" name="dormir" value="aveces"> A veces</label>
+            <label class="opcion-item"><input type="radio" name="dormir" value="no"> No, los evito</label>
+          </div>
+        </div>
+
+        <!-- Pregunta 3 -->
+        <div class="grupo-pregunta">
+          <label class="pregunta-titulo">3. ¿Cuáles de las siguientes estrategias aplicas para cuidar tu salud digital? (Selecciona todas las que apliquen)</label>
+          <div class="opciones-lista">
+            <label class="opcion-item"><input type="checkbox" name="habitos" value="descansos"> Hago pausas activas o sigo la regla 20-20-20 para la vista.</label>
+            <label class="opcion-item"><input type="checkbox" name="habitos" value="notificaciones"> Silencio notificaciones cuando necesito concentrarme.</label>
+            <label class="opcion-item"><input type="checkbox" name="habitos" value="zonas"> Establezco momentos o lugares libres de tecnología (ej. al comer).</label>
+            <label class="opcion-item"><input type="checkbox" name="habitos" value="ninguna"> Ninguna por ahora.</label>
+          </div>
+        </div>
+
+        <!-- Pregunta 4 -->
+        <div class="grupo-pregunta">
+          <label class="pregunta-titulo">4. ¿Te gustaría agregar algún comentario o sugerencia sobre cómo mejorar el bienestar digital en tu entorno?</label>
+          <textarea name="comentarios" placeholder="Escribe tu opinión aquí..."></textarea>
+        </div>
+
+        <button type="submit" class="btn-bienvenida" style="width: 100%;">Enviar Respuestas</button>
+      </form>
+    </section>
+
+    <!-- SECCIÓN 6: RECURSOS, MÚSICA Y VIDEO -->
+    <section id="recursos" class="tarjeta">
+      <h2 class="titulo-destacado">06. Recursos y multimedia</h2>
+      <p>
+        Aprende y relájate con nuestros recursos educativos y herramientas de bienestar.
+      </p>
+
+      <!-- REPRODUCTOR DE MÚSICA -->
+      <div id="musica" class="reproductor-card">
+        <div class="info-cancion">
+          <div class="icono-musica">🎵</div>
+          <div>
+            <h4 id="titulo-pista">Melodía Relajante de Estudio</h4>
+            <span id="estado-reproduccion">Pausado</span>
+          </div>
+        </div>
+
+        <div class="progreso-container">
+          <span id="tiempo-actual">0:00</span>
+          <input type="range" id="barra-progreso" value="0" min="0" max="100">
+          <span id="duracion-total">3:45</span>
+        </div>
+
+        <div class="controles-reproductor">
+          <button type="button" class="btn-control" id="btn-anterior" title="Anterior">⏮</button>
+          <button type="button" class="btn-control btn-play" id="btn-play-pause" title="Reproducir / Pausar">▶</button>
+          <button type="button" class="btn-control" id="btn-siguiente" title="Siguiente">⏭</button>
+          
+          <div class="volumen-wrapper">
+            <span>🔊</span>
+            <input type="range" id="control-volumen" min="0" max="1" step="0.05" value="0.7">
+          </div>
+        </div>
+      </div>
+
+      <!-- VIDEO EDUCATIVO DE YOUTUBE -->
+      <div id="video-destacado" class="video-container" style="margin-top: 30px;">
+        <iframe 
+          src="https://www.youtube.com/embed/1R5cCsW3Li8" 
+          title="Video Educativo sobre Salud Digital" 
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+          allowfullscreen>
+        </iframe>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- BOTÓN FLOTANTE PARA REGRESAR A LA PANTALLA DE BIENVENIDA -->
+  <label for="cerrar-bienvenida" class="btn-volver-arriba" id="btn-arriba" aria-label="Volver a la bienvenida" onclick="window.scrollTo(0, 0)">
+    ← Bienvenida
+  </label>
+
+  <!-- PIE DE PÁGINA -->
+  <footer>
+    <p>Explora la Salud Digital — Proyecto Escolar</p>
+    <p>Cuidando nuestro bienestar en la era tecnológica.</p>
+  </footer>
+
+  <!-- SCRIPTS -->
+  <script>
+    // Barra de progreso de lectura y botón Volver a la Bienvenida
+    const btnArriba = document.getElementById('btn-arriba');
+
+    window.addEventListener('scroll', () => {
+      const winScroll = document.documentElement.scrollTop || document.body.scrollTop;
+      const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      const scrolled = (winScroll / height) * 100;
+      document.getElementById('barra-lectura').style.width = scrolled + '%';
+
+      // Mostrar/Ocultar botón al bajar más de 300px
+      if (winScroll > 300) {
+        btnArriba.classList.add('mostrar');
+      } else {
+        btnArriba.classList.remove('mostrar');
+      }
+    });
+
+    // Desplegable de recursos
+    const dropdown = document.getElementById('menu-recursos');
+    const btnDropdown = document.getElementById('btn-dropdown');
+
+    btnDropdown.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const activo = dropdown.classList.toggle('activo');
+      btnDropdown.setAttribute('aria-expanded', activo);
+    });
+
+    document.addEventListener('click', () => {
+      if (dropdown.classList.contains('activo')) {
+        dropdown.classList.remove('activo');
+        btnDropdown.setAttribute('aria-expanded', 'false');
+      }
+    });
+
+    // Animación de aparición de tarjetas al hacer scroll
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.tarjeta').forEach(tarjeta => {
+      observer.observe(tarjeta);
+    });
+
+    // Lógica básica interactiva del reproductor de música
+    const btnPlayPause = document.getElementById('btn-play-pause');
+    const estadoReproduccion = document.getElementById('estado-reproduccion');
+    let reproduciendo = false;
+
+    btnPlayPause.addEventListener('click', () => {
+      reproduciendo = !reproduciendo;
+      if (reproduciendo) {
+        btnPlayPause.textContent = '⏸';
+        estadoReproduccion.textContent = 'Reproduciendo...';
+      } else {
+        btnPlayPause.textContent = '▶';
+        estadoReproduccion.textContent = 'Pausado';
+      }
+    });
+  </script>
+
+</body>
+</html>
